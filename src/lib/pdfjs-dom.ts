@@ -1,5 +1,3 @@
-import { Page } from "../types";
-
 export const getDocument = (elm: any): Document =>
   (elm || {}).ownerDocument || document;
 export const getWindow = (elm: any): typeof window =>
@@ -12,7 +10,7 @@ export const isHTMLCanvasElement = (elm: any) =>
 
 export const asElement = (x: any): HTMLElement => x;
 
-export const getPageFromElement = (target: HTMLElement): Page | null => {
+export const getPageFromElement = (target: HTMLElement) => {
   const node = asElement(target.closest(".page"));
 
   if (!node || !isHTMLElement(node)) {
@@ -21,50 +19,17 @@ export const getPageFromElement = (target: HTMLElement): Page | null => {
 
   const number = Number(asElement(node).dataset.pageNumber);
 
-  return { node, number } as Page;
+  return { node, number };
 };
 
-export const getPagesFromRange = (range: Range): Page[] => {
-  const startParentElement = range.startContainer.parentElement;
-  const endParentElement = range.endContainer.parentElement;
+export const getPageFromRange = (range: Range) => {
+  const parentElement = range.startContainer.parentElement;
 
-  if (!isHTMLElement(startParentElement) || !isHTMLElement(endParentElement)) {
-    return [] as Page[];
+  if (!isHTMLElement(parentElement)) {
+    return undefined;
   }
 
-  const startPage = getPageFromElement(asElement(startParentElement));
-  const endPage = getPageFromElement(asElement(endParentElement));
-
-  if (!startPage?.number || !endPage?.number) {
-    return [] as Page[];
-  }
-
-  if (startPage.number === endPage.number) {
-    return [startPage] as Page[];
-  }
-
-  if (startPage.number === endPage.number - 1) {
-    return [startPage, endPage] as Page[];
-  }
-
-  const pages: Page[] = [];
-
-  let currentPageNumber = startPage.number;
-
-  const document = startPage.node.ownerDocument;
-
-  while (currentPageNumber <= endPage.number) {
-    const currentPage = getPageFromElement(
-      document.querySelector(
-        `[data-page-number='${currentPageNumber}'`
-      ) as HTMLElement
-    );
-    if (currentPage) {
-      pages.push(currentPage);
-    }
-  }
-
-  return pages as Page[];
+  return getPageFromElement(asElement(parentElement));
 };
 
 export const findOrCreateContainerLayer = (

@@ -5,10 +5,6 @@ export interface LTWH {
   height: number;
 }
 
-export interface LTWHP extends LTWH {
-  pageNumber?: number;
-}
-
 export interface Scaled {
   x1: number;
   y1: number;
@@ -18,13 +14,11 @@ export interface Scaled {
 
   width: number;
   height: number;
-
-  pageNumber?: number;
 }
 
 export interface Position {
-  boundingRect: LTWHP;
-  rects: Array<LTWHP>;
+  boundingRect: LTWH;
+  rects: Array<LTWH>;
   pageNumber: number;
 }
 

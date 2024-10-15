@@ -1,15 +1,14 @@
 import React, { Component } from "react";
 
 import { Rnd } from "react-rnd";
-import { getPageFromElement } from "../lib/pdfjs-dom";
 
 import "../style/AreaHighlight.css";
 
-import type { LTWHP, ViewportHighlight } from "../types";
+import type { LTWH, ViewportHighlight } from "../types";
 
 interface Props {
   highlight: ViewportHighlight;
-  onChange: (rect: LTWHP) => void;
+  onChange: (rect: LTWH) => void;
   isScrolledTo: boolean;
 }
 
@@ -26,7 +25,7 @@ export class AreaHighlight extends Component<Props> {
         <Rnd
           className="AreaHighlight__part"
           onDragStop={(_, data) => {
-            const boundingRect: LTWHP = {
+            const boundingRect = {
               ...highlight.position.boundingRect,
               top: data.y,
               left: data.x,
@@ -34,13 +33,12 @@ export class AreaHighlight extends Component<Props> {
 
             onChange(boundingRect);
           }}
-          onResizeStop={(_mouseEvent, _direction, ref, _delta, position) => {
-            const boundingRect: LTWHP = {
+          onResizeStop={(_, direction, ref, delta, position) => {
+            const boundingRect = {
               top: position.y,
               left: position.x,
               width: ref.offsetWidth,
               height: ref.offsetHeight,
-              pageNumber: getPageFromElement(ref)?.number || -1,
             };
 
             onChange(boundingRect);
